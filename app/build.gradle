@@ -9,12 +9,16 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
     defaultConfig {
         applicationId "com.androiddevs.shoppinglisttestingyt"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        buildConfigField 'String', "PIXBAY_API_KEY", localProperties.getProperty('PIXBAY_API_KEY')
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
