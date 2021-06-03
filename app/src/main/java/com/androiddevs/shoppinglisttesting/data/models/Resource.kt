@@ -1,18 +1,23 @@
 package com.androiddevs.shoppinglisttesting.data.models
 
-sealed class Resource<T>(
-    status: Status,
-    data : T? = null,
-    message : String? = null
-) {
+data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
+    companion object {
+        fun <T> success(data: T?): Resource<T> {
+            return Resource(Status.SUCCESS, data, null)
+        }
 
-    class Loading<T>() : Resource<T>(Status.LOADING)
-    class Success<T>(data: T?, message: String?) : Resource<T>(Status.SUCCESS, data, message)
-    class Error<T>(message: String?) : Resource<T>(Status.ERROR,null, message)
+        fun <T> error(msg: String, data: T?): Resource<T> {
+            return Resource(Status.ERROR, data, msg)
+        }
+
+        fun <T> loading(data: T?): Resource<T> {
+            return Resource(Status.LOADING, data, null)
+        }
+    }
 }
 
 enum class Status {
     SUCCESS,
-    LOADING,
-    ERROR
+    ERROR,
+    LOADING
 }

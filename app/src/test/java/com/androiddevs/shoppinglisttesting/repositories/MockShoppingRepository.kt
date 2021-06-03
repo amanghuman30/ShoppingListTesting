@@ -44,9 +44,9 @@ class MockShoppingRepository : ShoppingRepository{
 
     override suspend fun searchForImages(imageQuery: String): Resource<PixbayResponse> {
         return if(shouldReturnNetworkError) {
-            Resource.Error("Error Occurred!")
+            Resource.error("Error Occurred!", null)
         } else {
-            Resource.Success(PixbayResponse(listOf(), 0, 0), "Success")
+            Resource.success(PixbayResponse(listOf(), 0, 0))
         }
     }
 }

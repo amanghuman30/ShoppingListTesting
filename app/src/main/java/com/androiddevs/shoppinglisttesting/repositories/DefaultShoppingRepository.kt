@@ -35,13 +35,13 @@ class DefaultShoppingRepository @Inject constructor(
             val response = pixabayApi.searchForImages(imageQuery)
             if(response.isSuccessful) {
                 response.body()?.let {
-                    return@let Resource.Success(it,"")
-                } ?: Resource.Error("An Unknown Error Occurred!")
+                    return@let Resource.success(it)
+                } ?: Resource.error("An Unknown Error Occurred!", null)
             } else {
-                Resource.Error("An Unknown Error Occurred!")
+                Resource.error("An Unknown Error Occurred!", null)
             }
         } catch (e : Exception) {
-            Resource.Error("Couldn't reach server. Check your internet connection please")
+            Resource.error("Couldn't reach server. Check your internet connection please", null)
         }
     }
 

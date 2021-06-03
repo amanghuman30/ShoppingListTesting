@@ -1,5 +1,6 @@
 package com.androiddevs.shoppinglisttesting.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,13 +23,13 @@ class ShoppingViewModel @Inject constructor(
     val totalPrice = shoppingRepository.observeTotalPrice()
 
     private val _images = MutableLiveData<Event<Resource<PixbayResponse>>>()
-    val images : MutableLiveData<Event<Resource<PixbayResponse>>> = _images
+    val images : LiveData<Event<Resource<PixbayResponse>>> = _images
 
     private val _curImageUrl = MutableLiveData<String>()
-    val curImageUrl : MutableLiveData<String> = _curImageUrl
+    val curImageUrl : LiveData<String> = _curImageUrl
 
     private val _insertShoppingItemStatus = MutableLiveData<Event<Resource<ShoppingItem>>>()
-    val insertShoppingItemStatus : MutableLiveData<Event<Resource<ShoppingItem>>> = _insertShoppingItemStatus
+    val insertShoppingItemStatus : LiveData<Event<Resource<ShoppingItem>>> = _insertShoppingItemStatus
 
     fun setCurImage(url  : String) {
         _curImageUrl.postValue(url)
