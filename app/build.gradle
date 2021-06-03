@@ -13,7 +13,7 @@ android {
     localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
     defaultConfig {
-        applicationId "com.androiddevs.shoppinglisttestingyt"
+        applicationId "com.androiddevs.shoppinglisttesting"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
