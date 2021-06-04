@@ -1,22 +1,28 @@
 package com.androiddevs.shoppinglisttesting.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.androiddevs.shoppinglisttesting.MainCoroutineRule
 import com.androiddevs.shoppinglisttesting.data.models.Resource
 import com.androiddevs.shoppinglisttesting.data.models.Status
 import com.androiddevs.shoppinglisttesting.getOrAwaitValueTest
 import com.androiddevs.shoppinglisttesting.repositories.MockShoppingRepository
 import com.androiddevs.shoppinglisttesting.util.Constants
 import com.google.common.truth.Truth
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class ShoppingViewModelTest {
 
     private lateinit var viewModel: ShoppingViewModel
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
