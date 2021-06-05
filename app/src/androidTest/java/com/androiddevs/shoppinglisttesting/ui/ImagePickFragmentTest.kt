@@ -1,12 +1,16 @@
 package com.androiddevs.shoppinglisttesting.ui
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.fragment.app.FragmentFactory
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.androiddevs.shoppinglisttesting.R
+import com.androiddevs.shoppinglisttesting.adapters.ImageAdapter
 import com.androiddevs.shoppinglisttesting.launchFragmentInHiltContainer
 import com.androiddevs.shoppinglisttesting.repositories.MockShoppingRepositoryAndroidTest
 import com.androiddevs.shoppinglisttesting.viewmodels.ShoppingViewModel
@@ -18,14 +22,22 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import javax.inject.Inject
 
-@HiltAndroidTest
+
 @ExperimentalCoroutinesApi
+@HiltAndroidTest
 @MediumTest
-class AddShoppingItemFragmentTest {
+class ImagePickFragmentTest {
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var fragmentFactory: ShoppingFragmentFactory
 
     @Before
     fun setUp() {
@@ -33,46 +45,29 @@ class AddShoppingItemFragmentTest {
     }
 
     @Test
-    fun clickItemImageView_navigateToImagePickFragment() {
+    fun clickImage_popbackStackSetImageUrl() {
+
         var navController = Mockito.mock(NavController::class.java)
 
-        launchFragmentInHiltContainer<AddShoppingItemFragment> {
-            Navigation.setViewNavController(requireView(), navController)
-        }
-
-        Espresso.onView(ViewMatchers.withId(R.id.ivShoppingImage)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            AddShoppingItemFragmentDirections.actionAddShoppingItemFragmentToImagePickFragment())
-    }
-
-    @Test
-    fun pressBackButton_popBackStack() {
-        var navController = Mockito.mock(NavController::class.java)
-
-        launchFragmentInHiltContainer<AddShoppingItemFragment> {
-            Navigation.setViewNavController(requireView(), navController)
-        }
-
-        Espresso.pressBack()
-
-        Mockito.verify(navController).popBackStack()
-    }
-
-    @Test
-    fun pressBackButton_CurrentImageUrlEmptiesInViewModel() {
-        val navController = Mockito.mock(NavController::class.java)
+        val imageUrl = "test"
 
         val testViewModel = ShoppingViewModel(MockShoppingRepositoryAndroidTest())
 
-        launchFragmentInHiltContainer<AddShoppingItemFragment> {
+        launchFragmentInHiltContainer<ImagePickFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
+            imageAdapter.images = listOf(imageUrl)
             viewModel = testViewModel
         }
 
-        Espresso.pressBack()
+        Espresso.onView(ViewMatchers.withId(R.id.rvImages)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<ImageAdapter.ImageViewHolder>(
+                0,
+                ViewActions.click()
+            )
+        )
 
-        Truth.assertThat(testViewModel?.curImageUrl?.value).isEqualTo("")
+        Mockito.verify(navController).popBackStack()
+        Truth.assertThat(testViewModel.curImageUrl.value).isEqualTo(imageUrl)
     }
 
 }
