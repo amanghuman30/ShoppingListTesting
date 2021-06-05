@@ -2,12 +2,15 @@ package com.androiddevs.shoppinglisttesting.di
 
 import android.content.Context
 import androidx.room.Room
+import com.androiddevs.shoppinglisttesting.R
 import com.androiddevs.shoppinglisttesting.api.PixabayApi
 import com.androiddevs.shoppinglisttesting.data.local.ShoppingDao
 import com.androiddevs.shoppinglisttesting.data.local.ShoppingItemDatabase
 import com.androiddevs.shoppinglisttesting.repositories.DefaultShoppingRepository
 import com.androiddevs.shoppinglisttesting.repositories.ShoppingRepository
 import com.androiddevs.shoppinglisttesting.util.Constants
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,4 +48,12 @@ object AppModule {
     fun provideShoppingRepository(pixabayApi: PixabayApi, shoppingDao: ShoppingDao) =
         DefaultShoppingRepository(shoppingDao, pixabayApi) as ShoppingRepository
 
+    @Provides
+    @Singleton
+    fun provideGlideInstance(@ApplicationContext context: Context
+    ) = Glide.with(context).
+        setDefaultRequestOptions(
+            RequestOptions().
+            placeholder(R.drawable.ic_image).
+            error(R.drawable.ic_image))
 }

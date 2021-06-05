@@ -84,11 +84,6 @@ class ShoppingDaoTest {
         assertThat(totalPriceSum).isEqualTo(2 * 10f + 4 * 5.5f)
     }
 
-    @Test
-    fun testLaunchFragmentInHiltContainer() {
-        launchFragmentInHiltContainer<ShoppingFragment> {  }
-    }
-
 }
 
 
