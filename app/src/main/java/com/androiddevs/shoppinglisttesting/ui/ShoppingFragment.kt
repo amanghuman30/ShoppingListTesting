@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class ShoppingFragment @Inject constructor(
     private val shoppingItemAdapter: ShoppingItemAdapter,
-    private var viewModel: ShoppingViewModel? = null
+    var viewModel: ShoppingViewModel? = null
 ) : Fragment(R.layout.fragment_shopping){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +36,8 @@ class ShoppingFragment @Inject constructor(
         setUpObservers()
     }
 
-    private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT, ItemTouchHelper.RIGHT) {
+    private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+        0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
@@ -44,7 +45,7 @@ class ShoppingFragment @Inject constructor(
         ) = true
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val item = shoppingItemAdapter.shoppingItems[viewHolder.adapterPosition]
+            val item = shoppingItemAdapter.shoppingItems[viewHolder.layoutPosition]
             viewModel?.deleteShoppingItem(item)
             Snackbar.make(requireView(), "Item deleted successfully!", Snackbar.LENGTH_SHORT).apply {
                 setAction("undo") {
