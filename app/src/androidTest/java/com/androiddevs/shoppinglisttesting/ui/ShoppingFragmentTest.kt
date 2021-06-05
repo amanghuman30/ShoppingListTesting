@@ -17,6 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
+import javax.inject.Inject
 
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
@@ -29,6 +30,15 @@ class ShoppingFragmentTest {
     @Before
     fun setup() {
         hiltRule.inject()
+    }
+
+    @Inject
+    lateinit var shoppingFragmentFactory: TestShoppingFragmentFactory
+
+
+    @Test
+    fun swipeRecyclerItem_deletesFromDb() {
+        
     }
 
     @Test
