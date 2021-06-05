@@ -9,15 +9,14 @@ import com.androiddevs.shoppinglisttesting.data.models.Resource
 class MockShoppingRepositoryAndroidTest : ShoppingRepository{
 
     private val shoppingItems = mutableListOf<ShoppingItem>()
-    private val observableShoppingItems = MutableLiveData<List<ShoppingItem>>()
+
+    private val observableShoppingItems = MutableLiveData<List<ShoppingItem>>(shoppingItems)
     private val observableTotalPrice = MutableLiveData<Float>()
 
     private var shouldReturnNetworkError = false
 
-
-    override suspend fun insertShoppingItem(shoppingItem: ShoppingItem) {
-        shoppingItems.add(shoppingItem)
-        refreshLiveData()
+    fun setShouldReturnNetworkError(value: Boolean) {
+        shouldReturnNetworkError = value
     }
 
     private fun refreshLiveData() {
@@ -25,8 +24,13 @@ class MockShoppingRepositoryAndroidTest : ShoppingRepository{
         observableTotalPrice.postValue(getTotalPrice())
     }
 
-    private fun getTotalPrice() : Float {
-        return shoppingItems.sumOf { it.price.toDouble()}.toFloat()
+    private fun getTotalPrice(): Float {
+        return shoppingItems.sumOf { it.price.toDouble() }.toFloat()
+    }
+
+    override suspend fun insertShoppingItem(shoppingItem: ShoppingItem) {
+        shoppingItems.add(shoppingItem)
+        refreshLiveData()
     }
 
     override suspend fun deleteShoppingItem(shoppingItem: ShoppingItem) {
@@ -44,7 +48,7 @@ class MockShoppingRepositoryAndroidTest : ShoppingRepository{
 
     override suspend fun searchForImages(imageQuery: String): Resource<PixbayResponse> {
         return if(shouldReturnNetworkError) {
-            Resource.error("Error Occurred!", null)
+            Resource.error("Error", null)
         } else {
             Resource.success(PixbayResponse(listOf(), 0, 0))
         }
