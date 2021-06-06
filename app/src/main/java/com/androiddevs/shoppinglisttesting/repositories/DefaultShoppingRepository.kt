@@ -41,6 +41,7 @@ class DefaultShoppingRepository @Inject constructor(
                 Resource.error("An Unknown Error Occurred!", null)
             }
         } catch (e : Exception) {
+            e.printStackTrace()
             Resource.error("Couldn't reach server. Check your internet connection please", null)
         }
     }

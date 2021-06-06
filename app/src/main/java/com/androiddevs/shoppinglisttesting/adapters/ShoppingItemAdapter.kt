@@ -42,7 +42,8 @@ class ShoppingItemAdapter @Inject constructor(
         holder.itemView.apply {
             tvName.text = item.name
             tvShoppingItemAmount.text = item.amount.toString()
-            tvShoppingItemPrice.text = item.price.toString()
+            val price = "${item.price.toString()}$"
+            tvShoppingItemTotalPrice.text = price
 
             glide.load(item.imageUrl).into(ivShoppingImage)
         }

@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevs.shoppinglisttesting.data.local.ShoppingItem
 import com.androiddevs.shoppinglisttesting.data.models.PixbayResponse
 import com.androiddevs.shoppinglisttesting.data.models.Resource
+import com.androiddevs.shoppinglisttesting.data.models.Status
 import com.androiddevs.shoppinglisttesting.repositories.ShoppingRepository
 import com.androiddevs.shoppinglisttesting.util.Constants
 import com.androiddevs.shoppinglisttesting.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -32,6 +34,8 @@ class ShoppingViewModel @Inject constructor(
 
     private val _insertShoppingItemStatus = MutableLiveData<Event<Resource<ShoppingItem>>>()
     val insertShoppingItemStatus : LiveData<Event<Resource<ShoppingItem>>> = _insertShoppingItemStatus
+
+    private var searchJob : Job? = null
 
     fun setCurImageUrl(url  : String) {
         _curImageUrl.postValue(url)
@@ -86,9 +90,18 @@ class ShoppingViewModel @Inject constructor(
 
         _images.value = Event(Resource.loading(null))
 
-        viewModelScope.launch {
+        searchJob?.apply {
+            if(isActive)
+                cancel()
+        }
+
+        searchJob = viewModelScope.launch {
             val response = shoppingRepository.searchForImages(imageQuery)
             _images.value = Event(response)
         }
+    }
+
+    fun clearImageSearch() {
+        _images.postValue(Event(Resource(Status.LOADING, null, null)))
     }
 }
